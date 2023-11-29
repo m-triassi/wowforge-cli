@@ -48,7 +48,7 @@ func initConfig() {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".wowforge-tmp" (without extension).
+		// Search config in home directory with name ".wowforge-cli" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("json")
 		viper.SetConfigName(".wowforge-cli")
