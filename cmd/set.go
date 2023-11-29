@@ -39,13 +39,11 @@ func init() {
 	setCmd.Flags().StringVar(&ApiKey, "api-key", "", "API key from your CurseForge Studio account. This is required for some endpoints to function correctly")
 	setCmd.Flags().StringVar(&Install, "install", "", "path to your target installation of World of Warcraft")
 
-	apiErr := viper.BindPFlag("api-key", setCmd.Flags().Lookup("api-key"))
-	if apiErr != nil {
+	if apiErr := viper.BindPFlag("api-key", setCmd.Flags().Lookup("api-key")); apiErr != nil {
 		return
 	}
 
-	installErr := viper.BindPFlag("install", setCmd.Flags().Lookup("install"))
-	if installErr != nil {
+	if installErr := viper.BindPFlag("install", setCmd.Flags().Lookup("install")); installErr != nil {
 		return
 	}
 }
