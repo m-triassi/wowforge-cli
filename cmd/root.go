@@ -44,21 +44,20 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
+		//Find home directory.
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
 		// Search config in home directory with name ".wowforge-cli" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigType("json")
 		viper.SetConfigName(".wowforge-cli")
+		viper.SetConfigType("json")
+		viper.AddConfigPath(home)
+
 	}
 
 	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	} else {
+	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Error Reading config file:", err)
 	}
 }
