@@ -34,15 +34,14 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.wowforge-cli.json)")
-
 }
 
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
+		fmt.Fprintln(os.Stderr, "Using config file:", cfgFile)
 	} else {
 		//Find home directory.
 		home, err := os.UserHomeDir()
