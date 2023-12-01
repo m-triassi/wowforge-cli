@@ -48,13 +48,15 @@ the path in quotations or escape all spaces, like so:
 
 var Install string
 var ApiKey string
+var DownloadDir string
 
 func init() {
 	rootCmd.AddCommand(setCmd)
 	rootCmd.AddCommand(setCmd)
 
 	apiUsage := "API key from your CurseForge Studio account. This is required for some endpoints to function correctly"
-	installUsage := "path to your target installation of World of Warcraft"
+	installUsage := "Path to your target installation of World of Warcraft"
+	downloadUsage := "Path for downloaded addons to be stored (default: /tmp/)"
 
 	originalInstall, installErr := setCmd.Flags().GetString("install")
 	if installErr == nil {
@@ -63,14 +65,25 @@ func init() {
 
 	originalApi, apiErr := setCmd.Flags().GetString("api-key")
 	if apiErr == nil {
-		fmt.Println("Could not get value for \"install\" configuration value.", apiErr)
+		fmt.Println("Could not get value for \"api-key\" configuration value.", apiErr)
+	}
+
+	originalDownload, downloadErr := setCmd.Flags().GetString("download-dir")
+
+	if downloadErr == nil {
+		fmt.Println("Could not get value for \"download-dir\" configuration value.", downloadErr)
 	}
 
 	setCmd.Flags().StringVar(&ApiKey, "api-key", originalApi, apiUsage)
+	setCmd.Flags().StringVar(&DownloadDir, "download-dir", originalDownload, downloadUsage)
 	setCmd.Flags().StringVar(&Install, "install", originalInstall, installUsage)
 
 	if apiErr := viper.BindPFlag("api-key", setCmd.Flags().Lookup("api-key")); apiErr != nil {
 		fmt.Println(apiErr)
+	}
+
+	if downloadErr := viper.BindPFlag("download-dir", setCmd.Flags().Lookup("download-dir")); downloadErr != nil {
+		fmt.Println(downloadErr)
 	}
 
 	if installErr := viper.BindPFlag("install", setCmd.Flags().Lookup("install")); installErr != nil {

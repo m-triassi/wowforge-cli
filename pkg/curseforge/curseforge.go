@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"time"
 )
 
@@ -13,16 +14,18 @@ const apiHost = "https://www.curseforge.com/api/v1"
 const gameId = 1
 
 type Client struct {
-	apiHost string
-	gameId  int
-	Client  *http.Client
+	apiHost      string
+	gameId       int
+	DownloadPath string
+	Client       *http.Client
 }
 
 func NewClient() *Client {
 	return &Client{
-		apiHost: apiHost,
-		gameId:  gameId,
-		Client:  &http.Client{},
+		apiHost:      apiHost,
+		gameId:       gameId,
+		DownloadPath: "/tmp",
+		Client:       &http.Client{},
 	}
 }
 
@@ -71,7 +74,7 @@ func (c *Client) GetFiles(modId int) FileSet {
 
 func (c *Client) DownloadFile(modId int, file File) File {
 	endpoint := fmt.Sprintf("/mods/%d/files/%d/download", modId, file.Id)
-	dest := "/tmp/" + file.Filename
+	dest := path.Clean(c.DownloadPath + "/" + file.Filename)
 	out, err := os.Create(dest)
 
 	if err != nil {
