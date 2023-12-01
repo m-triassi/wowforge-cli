@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -30,6 +31,7 @@ type File struct {
 	Filename     string    `json:"filename"`
 	GameVersions []string  `json:"gameVersions"`
 	DateCreated  time.Time `json:"dateCreated"`
+	Location     string    `json:"location"`
 }
 
 type FileSet struct {
@@ -67,9 +69,29 @@ func (c *Client) GetFiles(modId int) FileSet {
 	return fileSet
 }
 
-func (c *Client) DownloadFile(modId int, fileId int) bool {
-	endpoint := fmt.Sprintf("/mods/%d/files/%d/download", modId, fileId)
-	fmt.Println(endpoint)
+func (c *Client) DownloadFile(modId int, file File) File {
+	endpoint := fmt.Sprintf("/mods/%d/files/%d/download", modId, file.Id)
+	dest := "/tmp/" + file.Filename
+	out, err := os.Create(dest)
 
-	return true
+	if err != nil {
+		fmt.Errorf("Failed to create temporary file: %w", err)
+	}
+	defer out.Close()
+
+	resp, err := http.Get(c.apiHost + endpoint)
+
+	if err != nil {
+		fmt.Errorf("File could not be downloaded: %w", err)
+	}
+	defer resp.Body.Close()
+
+	_, writeErr := io.Copy(out, resp.Body)
+	if writeErr != nil {
+		fmt.Errorf("File could not be copied to target destination (%s): %w", dest, err)
+	}
+
+	file.Location = dest
+
+	return file
 }
