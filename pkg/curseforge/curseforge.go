@@ -45,14 +45,14 @@ func (c *Client) GetFiles(modId int) FileSet {
 	endpoint := fmt.Sprintf("/mods/%d/files", modId)
 	req, err := http.NewRequest("GET", c.apiHost+endpoint, nil)
 	if err != nil {
-		fmt.Errorf("Request is malformed: %w", err)
+		panic(fmt.Errorf("Request is malformed: %w", err))
 	}
 
 	req.Header.Set("Accept", "application/json")
 	resp, err := c.Client.Do(req)
 
 	if err != nil || resp.StatusCode != 200 {
-		fmt.Errorf("Request failed (Status code %s): %w", resp.Status, err)
+		panic(fmt.Errorf("Request failed (Status code %s): %w", resp.Status, err))
 	}
 
 	defer resp.Body.Close()
@@ -60,13 +60,13 @@ func (c *Client) GetFiles(modId int) FileSet {
 	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
-		fmt.Errorf("Failed to read response body: %w", err)
+		panic(fmt.Errorf("Failed to read response body: %w", err))
 	}
 
 	fileSet := FileSet{}
 	err = json.Unmarshal(body, &fileSet)
 	if err != nil {
-		fmt.Errorf("Could not map reponse to type FileSet: %w", err)
+		panic(fmt.Errorf("Could not map reponse to type FileSet: %w", err))
 	}
 
 	return fileSet
@@ -78,30 +78,30 @@ func (c *Client) DownloadFile(modId int, file File) File {
 	out, err := os.Create(dest)
 
 	if err != nil {
-		fmt.Errorf("Failed to create temporary file: %w", err)
+		panic(fmt.Errorf("Failed to create temporary file: %w", err))
 	}
 	defer func(out *os.File) {
 		err := out.Close()
 		if err != nil {
-			fmt.Errorf("Could not close file: %w", err)
+			panic(fmt.Errorf("Could not close file: %w", err))
 		}
 	}(out)
 
 	resp, err := http.Get(c.apiHost + endpoint)
 
 	if err != nil {
-		fmt.Errorf("File could not be downloaded: %w", err)
+		panic(fmt.Errorf("File could not be downloaded: %w", err))
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			fmt.Errorf("Could not close response body: %w", err)
+			panic(fmt.Errorf("Could not close response body: %w", err))
 		}
 	}(resp.Body)
 
 	_, writeErr := io.Copy(out, resp.Body)
 	if writeErr != nil {
-		fmt.Errorf("File could not be copied to target destination (%s): %w", dest, err)
+		panic(fmt.Errorf("File could not be copied to target destination (%s): %w", dest, err))
 	}
 
 	file.Location = dest
