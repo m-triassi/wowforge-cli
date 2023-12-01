@@ -5,10 +5,11 @@ package cmd
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // setCmd represents the set command
@@ -25,6 +26,10 @@ the path in quotations or escape all spaces, like so:
   wowforge-cli set --install /path\ to/my/install\ location
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+
+		if _, err := os.Stat(viper.ConfigFileUsed()); errors.Is(err, os.ErrNotExist) {
+			os.Create(viper.ConfigFileUsed())
+		}
 
 		writeErr := viper.WriteConfig()
 		if writeErr != nil {
