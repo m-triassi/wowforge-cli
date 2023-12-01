@@ -77,14 +77,24 @@ func (c *Client) DownloadFile(modId int, file File) File {
 	if err != nil {
 		fmt.Errorf("Failed to create temporary file: %w", err)
 	}
-	defer out.Close()
+	defer func(out *os.File) {
+		err := out.Close()
+		if err != nil {
+			fmt.Errorf("Could not close file: %w", err)
+		}
+	}(out)
 
 	resp, err := http.Get(c.apiHost + endpoint)
 
 	if err != nil {
 		fmt.Errorf("File could not be downloaded: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			fmt.Errorf("Could not close response body: %w", err)
+		}
+	}(resp.Body)
 
 	_, writeErr := io.Copy(out, resp.Body)
 	if writeErr != nil {
