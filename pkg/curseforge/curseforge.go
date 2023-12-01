@@ -20,6 +20,12 @@ type Client struct {
 	Client       *http.Client
 }
 
+var c *Client
+
+func init() {
+	c = NewClient()
+}
+
 func NewClient() *Client {
 	return &Client{
 		apiHost:      apiHost,
@@ -39,6 +45,10 @@ type File struct {
 
 type FileSet struct {
 	Data []File `json:"data"`
+}
+
+func GetFiles(modId int) FileSet {
+	return c.GetFiles(modId)
 }
 
 func (c *Client) GetFiles(modId int) FileSet {
@@ -70,6 +80,10 @@ func (c *Client) GetFiles(modId int) FileSet {
 	}
 
 	return fileSet
+}
+
+func DownloadFile(modId int, file File) File {
+	return c.DownloadFile(modId, file)
 }
 
 func (c *Client) DownloadFile(modId int, file File) File {
