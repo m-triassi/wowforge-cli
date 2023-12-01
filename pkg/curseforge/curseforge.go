@@ -50,7 +50,10 @@ func (c *Client) GetFiles(modId int) FileSet {
 		fmt.Errorf("Request failed (Status code %s): %w", resp.Status, err)
 	}
 
+	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
+
 	if err != nil {
 		fmt.Errorf("Failed to read response body: %w", err)
 	}
