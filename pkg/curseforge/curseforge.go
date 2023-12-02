@@ -126,7 +126,7 @@ func (c *Client) DownloadFile(modId int, file File) (File, error) {
 }
 
 func InstallAddon(file File, dest string) error {
-	c.InstallAddon(file, dest)
+	return c.InstallAddon(file, dest)
 }
 
 func (c *Client) InstallAddon(file File, dest string) error {
