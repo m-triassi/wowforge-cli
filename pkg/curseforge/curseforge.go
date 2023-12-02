@@ -1,12 +1,14 @@
 package curseforge
 
 import (
+	"archive/zip"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"time"
 )
 
@@ -121,4 +123,42 @@ func (c *Client) DownloadFile(modId int, file File) File {
 	file.Location = dest
 
 	return file
+}
+
+func (c *Client) InstallAddon(file File, dest string) {
+	addon, err := zip.OpenReader(file.Location)
+	if err != nil {
+		panic(fmt.Errorf("Failed to read Zip file: %w", err))
+	}
+	defer addon.Close()
+
+	destination, err := filepath.Abs(dest)
+	if err != nil {
+		panic(fmt.Errorf("Install file path is invalid %w", err))
+	}
+
+	for _, zipFile := range addon.File {
+		zippedFile, err := zipFile.Open()
+		if err != nil {
+			panic(fmt.Errorf("Failed to open zipped file: %w", err))
+		}
+		defer zippedFile.Close()
+
+		targetFilePath := filepath.Join(destination, zipFile.Name)
+		if zipFile.FileInfo().IsDir() {
+			os.MkdirAll(targetFilePath, zipFile.Mode())
+		} else {
+			targetFile, err := os.Create(targetFilePath)
+			if err != nil {
+				panic(fmt.Errorf("Failed to create target file: %w", err))
+			}
+			defer targetFile.Close()
+
+			_, err = io.Copy(targetFile, zippedFile)
+			if err != nil {
+				panic(fmt.Errorf("Failed to copy content to target file: %w", err))
+			}
+		}
+	}
+
 }
