@@ -125,6 +125,10 @@ func (c *Client) DownloadFile(modId int, file File) File {
 	return file
 }
 
+func InstallAddon(file File, dest string) {
+	c.InstallAddon(file, dest)
+}
+
 func (c *Client) InstallAddon(file File, dest string) {
 	addon, err := zip.OpenReader(file.Location)
 	if err != nil {
