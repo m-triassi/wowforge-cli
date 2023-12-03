@@ -169,6 +169,10 @@ func (c *Client) InstallAddon(file File, dest string) error {
 	return nil
 }
 
+func NegotiateFile(files FileSet) File {
+	return c.NegotiateFile(files)
+}
+
 func (c *Client) NegotiateFile(files FileSet) File {
 	latest := File{GameVersions: make([]string, 1)}
 	fmt.Println(latest)
