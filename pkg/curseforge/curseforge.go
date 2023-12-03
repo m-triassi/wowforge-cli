@@ -175,7 +175,6 @@ func NegotiateFile(files FileSet) File {
 
 func (c *Client) NegotiateFile(files FileSet) File {
 	latest := File{GameVersions: make([]string, 1)}
-	fmt.Println(latest)
 	for _, file := range files.Data {
 		if semver.Compare("v"+file.GameVersions[0], "v"+latest.GameVersions[0]) == 1 {
 			latest = file
