@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/mod/semver"
 	"io"
 	"net/http"
 	"os"
@@ -166,4 +167,15 @@ func (c *Client) InstallAddon(file File, dest string) error {
 	}
 
 	return nil
+}
+
+func (c *Client) NegotiateFile(files FileSet) File {
+	latest := File{GameVersions: make([]string, 1)}
+	fmt.Println(latest)
+	for _, file := range files.Data {
+		if semver.Compare("v"+file.GameVersions[0], "v"+latest.GameVersions[0]) == 1 {
+			latest = file
+		}
+	}
+	return latest
 }
