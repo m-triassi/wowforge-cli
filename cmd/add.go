@@ -14,14 +14,13 @@ import (
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "Search for, and add an addon to your tracked addons",
+	Use:   "add <addon id>",
+	Short: "Add an addon to your list of tracked addons. ",
 	Long: `Add an addon to your list of used addons. This wll immediately download and track
-the addon of your choosing. Usage:
+the addon of your choosing.
 
-wowforge-cli add [addon name]
-
-Be sure to only pass 1 addon name per addition. You will be prompted to choose which addon from the result set you'd like`,
+Be sure to only pass 1 addon id per addition. If you pass the id of an already tracked addon this command will simply 
+update that addon in isolation.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("add called")
 		modId, err := strconv.Atoi(args[0])
