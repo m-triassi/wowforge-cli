@@ -22,7 +22,6 @@ the addon of your choosing.
 Be sure to only pass 1 addon id per addition. If you pass the id of an already tracked addon this command will simply 
 update that addon in isolation.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
 		modId, err := strconv.Atoi(args[0])
 		if err != nil {
 			panic(fmt.Errorf("Passed mod ID is not strictly an integer: %w", err))
