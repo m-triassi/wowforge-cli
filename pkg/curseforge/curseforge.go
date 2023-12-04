@@ -1,12 +1,15 @@
 package curseforge
 
 import (
+	"archive/zip"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/mod/semver"
 	"io"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"time"
 )
 
@@ -47,22 +50,22 @@ type FileSet struct {
 	Data []File `json:"data"`
 }
 
-func GetFiles(modId int) FileSet {
+func GetFiles(modId int) (FileSet, error) {
 	return c.GetFiles(modId)
 }
 
-func (c *Client) GetFiles(modId int) FileSet {
+func (c *Client) GetFiles(modId int) (FileSet, error) {
 	endpoint := fmt.Sprintf("/mods/%d/files", modId)
 	req, err := http.NewRequest("GET", c.apiHost+endpoint, nil)
 	if err != nil {
-		panic(fmt.Errorf("Request is malformed: %w", err))
+		return FileSet{}, fmt.Errorf("Request is malformed: %w", err)
 	}
 
 	req.Header.Set("Accept", "application/json")
 	resp, err := c.Client.Do(req)
 
 	if err != nil || resp.StatusCode != 200 {
-		panic(fmt.Errorf("Request failed (Status code %s): %w", resp.Status, err))
+		return FileSet{}, fmt.Errorf("Request failed (Status code %s): %w", resp.Status, err)
 	}
 
 	defer resp.Body.Close()
@@ -70,29 +73,29 @@ func (c *Client) GetFiles(modId int) FileSet {
 	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
-		panic(fmt.Errorf("Failed to read response body: %w", err))
+		return FileSet{}, fmt.Errorf("Failed to read response body: %w", err)
 	}
 
 	fileSet := FileSet{}
 	err = json.Unmarshal(body, &fileSet)
 	if err != nil {
-		panic(fmt.Errorf("Could not map reponse to type FileSet: %w", err))
+		return FileSet{}, fmt.Errorf("Could not map reponse to type FileSet: %w", err)
 	}
 
-	return fileSet
+	return fileSet, nil
 }
 
-func DownloadFile(modId int, file File) File {
+func DownloadFile(modId int, file File) (File, error) {
 	return c.DownloadFile(modId, file)
 }
 
-func (c *Client) DownloadFile(modId int, file File) File {
+func (c *Client) DownloadFile(modId int, file File) (File, error) {
 	endpoint := fmt.Sprintf("/mods/%d/files/%d/download", modId, file.Id)
 	dest := path.Clean(c.DownloadPath + "/" + file.Filename)
 	out, err := os.Create(dest)
 
 	if err != nil {
-		panic(fmt.Errorf("Failed to create temporary file: %w", err))
+		return File{}, fmt.Errorf("Failed to create temporary file: %w", err)
 	}
 	defer func(out *os.File) {
 		err := out.Close()
@@ -104,7 +107,7 @@ func (c *Client) DownloadFile(modId int, file File) File {
 	resp, err := http.Get(c.apiHost + endpoint)
 
 	if err != nil {
-		panic(fmt.Errorf("File could not be downloaded: %w", err))
+		return File{}, fmt.Errorf("File could not be downloaded: %w", err)
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -115,10 +118,67 @@ func (c *Client) DownloadFile(modId int, file File) File {
 
 	_, writeErr := io.Copy(out, resp.Body)
 	if writeErr != nil {
-		panic(fmt.Errorf("File could not be copied to target destination (%s): %w", dest, err))
+		return File{}, fmt.Errorf("File could not be copied to target destination (%s): %w", dest, err)
 	}
 
 	file.Location = dest
 
-	return file
+	return file, nil
+}
+
+func InstallAddon(file File, dest string) error {
+	return c.InstallAddon(file, dest)
+}
+
+func (c *Client) InstallAddon(file File, dest string) error {
+	addon, err := zip.OpenReader(file.Location)
+	if err != nil {
+		return fmt.Errorf("Failed to read Zip file: %w", err)
+	}
+	defer addon.Close()
+
+	destination, err := filepath.Abs(dest)
+	if err != nil {
+		return fmt.Errorf("Install file path is invalid %w", err)
+	}
+
+	for _, zipFile := range addon.File {
+		zippedFile, err := zipFile.Open()
+		if err != nil {
+			return fmt.Errorf("Failed to open zipped file: %w", err)
+		}
+		defer zippedFile.Close()
+
+		targetFilePath := filepath.Join(destination, zipFile.Name)
+		if zipFile.FileInfo().IsDir() {
+			os.MkdirAll(targetFilePath, zipFile.Mode())
+		} else {
+			targetFile, err := os.Create(targetFilePath)
+			if err != nil {
+				return fmt.Errorf("Failed to create target file: %w", err)
+			}
+			defer targetFile.Close()
+
+			_, err = io.Copy(targetFile, zippedFile)
+			if err != nil {
+				return fmt.Errorf("Failed to copy content to target file: %w", err)
+			}
+		}
+	}
+
+	return nil
+}
+
+func NegotiateFile(files FileSet) File {
+	return c.NegotiateFile(files)
+}
+
+func (c *Client) NegotiateFile(files FileSet) File {
+	latest := File{GameVersions: make([]string, 1)}
+	for _, file := range files.Data {
+		if semver.Compare("v"+file.GameVersions[0], "v"+latest.GameVersions[0]) == 1 {
+			latest = file
+		}
+	}
+	return latest
 }
