@@ -17,7 +17,8 @@ var addCmd = &cobra.Command{
 	Use:   "add <addon id>",
 	Short: "Add an addon to your list of tracked addons. ",
 	Long: `Add an addon to your list of used addons. This wll immediately download and track
-the addon of your choosing.
+the addon of your choosing. The addon ID can be found under the "Project ID" heading in the "About Project" section of an 
+addon's description
 
 Be sure to only pass 1 addon id per addition. If you pass the id of an already tracked addon this command will simply 
 update that addon in isolation.`,
