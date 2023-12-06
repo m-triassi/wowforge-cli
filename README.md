@@ -47,3 +47,11 @@ Updating addons is even easier, since all tracked ID are saved, you running the 
 ```bash
 wowforge-cli update
 ```
+
+## Contributing
+
+Please see [CONTRIBUTING](https://github.com/m-triassi/wowforge-cli/blob/main/CONTRIBUTING.md) for details.
+
+## License
+
+The MIT License (MIT). Please see [License File](https://github.com/m-triassi/wowforge-cli/blob/main/LICENSE.md) for more information.
