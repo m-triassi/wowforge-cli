@@ -24,7 +24,14 @@ source ~/.bashrc
 Finally you can also just keep the binary in a specific file and specify the full path to it when ever you want to use it, like so: `./my/path/to/wowforge-cli <command>`
 
 ### Set up
-Before being able to use application you **must** set the install path configuration value. This path specifies where to install addons to. If you are using Lutris or Wine this path should be mounted somewhere in your file system. With Lutris specifically you can right-click on the game and press "Browse Files" and it should open a file browser in the root of the wine environment. Make sure to get the path all the way down to the `.../interface/addons` directory. Once you've found the path use the `set` command to set the path:
+Before being able to use application you **must** set the install path configuration value. This path specifies where 
+to install addons to. If you are using Lutris or Wine this path should be mounted somewhere in your file system. 
+
+With Lutris specifically you can right-click on the game and press "Browse Files" and it should open a file browser in 
+the root of the wine environment. 
+
+Make sure to get the path all the way down to the `.../interface/addons` directory. 
+Once you've found the path use the `set` command to set the path:
 
 ```bash
 wowforge-cli set --install "/path/to/Games/battlenet/drive_c/Program Files (x86)/World of Warcraft/_retail_/Interface/AddOns/"
@@ -34,7 +41,8 @@ wowforge-cli set --install "/path/to/Games/battlenet/drive_c/Program Files (x86)
 Once `wowforge-cli` is installed and set up you can simply track new addons with the `add` command, and update them with the `update` command.
 
 ### Adding a Addon
-To add an addon you will need the "mod id" of the addon. Thankfully this ID is easy to find and is listed under "Project ID" in the description of each addon, under the "About Project" heading on the right-hand side. With this ID in hand you can simply run:
+To add an addon you will need the "project id" of the addon. Thankfully this ID is easy to find and is listed under "Project ID" 
+in the description of each addon, under the "About Project" heading on the right-hand side. With this ID in hand you can simply run:
 
 ```bash
 wowforge-cli add <ID>
