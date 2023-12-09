@@ -1,7 +1,8 @@
-# Simple Makefile for a Go project
-
 # Build the application
 all: build
+
+setup:
+	@go mod download
 
 build:
 	@echo "Building..."
