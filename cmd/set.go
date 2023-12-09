@@ -52,7 +52,6 @@ var DownloadDir string
 
 func init() {
 	rootCmd.AddCommand(setCmd)
-	rootCmd.AddCommand(setCmd)
 
 	apiUsage := "API key from your CurseForge Studio account. This is required for some endpoints to function correctly"
 	installUsage := "Path to your target installation of World of Warcraft"
