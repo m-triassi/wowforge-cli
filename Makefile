@@ -20,6 +20,6 @@ test:
 # Clean the binary
 clean:
 	@echo "Cleaning..."
-	@rm -f dist/wowforge-cli
+	@rm -f dist/*
 
 .PHONY: all build run test clean
