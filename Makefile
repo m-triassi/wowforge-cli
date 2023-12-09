@@ -6,7 +6,7 @@ setup:
 
 build:
 	@echo "Building..."
-	@go build -o bin/wowforge-cli main.go
+	@go build -o dist/wowforge-cli main.go
 
 # Run the application
 run:
@@ -20,6 +20,6 @@ test:
 # Clean the binary
 clean:
 	@echo "Cleaning..."
-	@rm -f bin/wowforge-cli
+	@rm -f dist/wowforge-cli
 
 .PHONY: all build run test clean
