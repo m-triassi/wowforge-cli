@@ -51,7 +51,7 @@ jobs:
       - name: Push changelog
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
-          git push origin master
+          git push origin main
 
       - name: Release new CLI version
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
