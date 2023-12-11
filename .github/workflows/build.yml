@@ -1,0 +1,63 @@
+name: Generate release-artifacts
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  generate:
+    name: Generate cross-platform builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set-up Golang
+        uses: actions/setup-go@v4
+        with:
+          go-version: '^1.21.3'
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Generate changelog and tag release
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          output-file: CHANGELOG.md
+          input-file: CHANGELOG.md
+          fallback-version: 0.0.0
+          skip-version-file: true
+          skip-commit: true
+          git-push: false
+          skip-tag: true
+
+      - name: Write changelog to temp file for goreleaser
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: echo "${{ steps.changelog.outputs.clean_changelog }}" > ${{ runner.temp }}/CHANGELOG.md
+
+      - name: Commit release
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          git config user.name "Massimo Triassi"
+          git config user.email "m-triassi@users.noreply.github.com"
+          git add .
+          git commit -m "chore(release): ${{ steps.changelog.outputs.tag }}"
+
+      - name: Tag commit
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: git tag ${{ steps.changelog.outputs.tag }}
+
+      - name: Push changelog
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          git push origin main
+
+      - name: Release new CLI version
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASER_TOKEN }}
