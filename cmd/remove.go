@@ -33,13 +33,18 @@ the associated files for that addon.`,
 
 		fileSet, _ := curseforge.GetFiles(modId)
 		filename := curseforge.NegotiateFile(fileSet).Filename
+
 		re := regexp.MustCompile("[a-zA-Z]*")
 		res := string(re.Find([]byte(filename)))
 
-		del, err := filepath.Glob(viper.GetString("install") + res + "*")
+		installPath := viper.GetString("install")
+		del, err := filepath.Glob(installPath + res + "*")
+
+		if err != nil {
+			panic(fmt.Errorf("could not read filesystem at path (%s): %w", installPath, err))
+		}
 
 		filesystem.DeleteAll(del)
-
 		viper.Set("addons", addons)
 		viper.WriteConfig()
 	},
