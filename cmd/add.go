@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/m-triassi/wowforge-cli/internal/search"
 	"github.com/m-triassi/wowforge-cli/pkg/curseforge"
 	"github.com/spf13/viper"
 	"strconv"
@@ -46,7 +47,7 @@ update that addon in isolation.`,
 		}
 
 		list := viper.GetIntSlice("addons")
-		if !contains(list, modId) {
+		if !search.Contains(list, modId) {
 			list = append(list, modId)
 			viper.Set("addons", list)
 			viper.WriteConfig()
@@ -56,13 +57,4 @@ update that addon in isolation.`,
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-}
-
-func contains(haystack []int, needle int) bool {
-	for _, value := range haystack {
-		if value == needle {
-			return true
-		}
-	}
-	return false
 }
