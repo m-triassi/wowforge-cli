@@ -1,3 +1,20 @@
+# [0.11.0](https://github.com/m-triassi/wowforge-cli/compare/v0.10.0...v0.11.0) (2023-12-20)
+
+
+### Bug Fixes
+
+* [#17](https://github.com/m-triassi/wowforge-cli/issues/17) add error handling to prevent trying to delete bad directories ([ffb784a](https://github.com/m-triassi/wowforge-cli/commit/ffb784a61aa67030880380c134fd22946bac3bff))
+* [#17](https://github.com/m-triassi/wowforge-cli/issues/17) reverse equality sign to get correct result ([58c59b8](https://github.com/m-triassi/wowforge-cli/commit/58c59b84433274986026511fbcf0ed67a14045d2))
+
+
+### Features
+
+* [#17](https://github.com/m-triassi/wowforge-cli/issues/17) add basic filesystem package for managing folders ([d4d287b](https://github.com/m-triassi/wowforge-cli/commit/d4d287b3a9b535a454a2298be92a331fb9cfdb2b))
+* [#17](https://github.com/m-triassi/wowforge-cli/issues/17) add command to remove installed addons ([0ff7045](https://github.com/m-triassi/wowforge-cli/commit/0ff7045383be7c02e7f454147cd3c72271bceebe))
+* [#17](https://github.com/m-triassi/wowforge-cli/issues/17) add find command and deduplicate functionality ([e3f1194](https://github.com/m-triassi/wowforge-cli/commit/e3f1194a819e533d0e11bfa80c3dbe397868dba2))
+
+
+
 # [0.10.0](https://github.com/m-triassi/wowforge-cli/compare/v0.9.0...v0.10.0) (2023-12-11)
 
 
