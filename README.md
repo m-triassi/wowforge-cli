@@ -5,23 +5,30 @@ WoWForge-CLI is an simple command line utility for Linux that can be used to tra
 ## Installation
 Currently pre-built binaries are available for download in the repositories [releases](https://github.com/m-triassi/wowforge-cli/releases) page. Simply download a release and follow the guidance below.
 
-First ensure that the downloaded binary is executable:
-```bash
-sudo chmod +x /path/to/wowforge-cli 
-```
+### Linux
 
-Then, simply move the built application to any folder in your `PATH`, like `/usr/local/bin` or `/home/MYUSER/.local/bin` depending on your system, and personal setup.
+Pick the correct file for your current distribution and architecture and download it. 
 
-Alternatively you can make a new directory somewhere and append that directory to your `PATH`, like so:
+For example if you are on Ubuntu, download the `wowforge-cli_x.x.x_amd64.deb` file where `x.x.x` is the latest release version
+and run the following:
 
 ```bash
-mkdir /my/custom/path
-mv ~/Downloads/wowforge-cli /my/custom/path
-echo "export PATH=\"$PATH:/my/custom/path\"" >> ~/.bashrc
-source ~/.bashrc
+sudo apt install ./wowforge-cli_x.x.x_amd64.deb
 ```
 
-Finally you can also just keep the binary in a specific file and specify the full path to it when ever you want to use it, like so: `./my/path/to/wowforge-cli <command>`
+Once complete you may run `wowforge-cli` globally.
+
+### MacOS 
+
+`wowforge-cli` is distributed via [brew](https://brew.sh/), you can install the latest version of the application by adding the tap, and installing
+the application.
+
+```bash
+brew tap m-triassi/public
+brew install wowforge-cli
+```
+
+Once complete you may run `wowforge-cli` globally.
 
 ### Set up
 Before being able to use application you **must** set the install path configuration value. This path specifies where 
