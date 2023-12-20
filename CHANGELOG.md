@@ -1,3 +1,17 @@
+# [1.0.0](https://github.com/m-triassi/wowforge-cli/compare/v0.11.0...v1.0.0) (2023-12-20)
+
+
+### Features
+
+* add install instruction ([e310614](https://github.com/m-triassi/wowforge-cli/commit/e310614aa15a560bab29f2a1077852293bdd72f7))
+
+
+### BREAKING CHANGES
+
+* Finalize release, even though this is a docs change.
+
+
+
 # [0.11.0](https://github.com/m-triassi/wowforge-cli/compare/v0.10.0...v0.11.0) (2023-12-20)
 
 
