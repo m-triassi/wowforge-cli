@@ -1,10 +1,14 @@
 package search
 
 func Contains(haystack []int, needle int) bool {
-	for _, value := range haystack {
+	return Find(haystack, needle) <= 0
+}
+
+func Find(haystack []int, needle int) int {
+	for index, value := range haystack {
 		if value == needle {
-			return true
+			return index
 		}
 	}
-	return false
+	return -1
 }
