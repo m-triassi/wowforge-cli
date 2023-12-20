@@ -45,6 +45,7 @@ the associated files for that addon.`,
 		}
 
 		filesystem.DeleteAll(del)
+
 		viper.Set("addons", addons)
 		viper.WriteConfig()
 	},
