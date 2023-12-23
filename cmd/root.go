@@ -13,10 +13,13 @@ import (
 
 var cfgFile string
 
+const version = "v1.0.0"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "wowforge-cli",
-	Short: "A light installer for fetching your latest addons for WoW",
+	Use:     "wowforge-cli",
+	Version: version,
+	Short:   "A light installer for fetching your latest addons for WoW",
 	Long: `wowforge-cli is a light-weight command line utility that can fetch the latest versions
 of your chosen addons. It maintains a list of tracked addons for you, and allows you to update them
 all together.

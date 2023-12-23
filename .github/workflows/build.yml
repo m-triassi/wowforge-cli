@@ -36,6 +36,10 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: echo "${{ steps.changelog.outputs.clean_changelog }}" > ${{ runner.temp }}/CHANGELOG.md
 
+      - name: Update version number for flag
+        run: |
+          sed -i 's/const version = \"v[0-9\.]*\"/const version = \"${{ steps.changelog.outputs.tag }}\"/' cmd/root.go
+
       - name: Commit release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
