@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/m-triassi/wowforge-cli/compare/v1.0.0...v1.1.0) (2023-12-23)
+
+
+### Features
+
+* [#19](https://github.com/m-triassi/wowforge-cli/issues/19) add automatic incrementing version flag ([68e14de](https://github.com/m-triassi/wowforge-cli/commit/68e14deeedac5ede115120af2bf90dee8e6d4074))
+
+
+
 # [1.0.0](https://github.com/m-triassi/wowforge-cli/compare/v0.11.0...v1.0.0) (2023-12-20)
 
 
