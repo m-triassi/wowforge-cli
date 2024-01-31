@@ -36,6 +36,7 @@ the associated files for that addon.`,
 
 		re := regexp.MustCompile("[a-zA-Z]*")
 		res := string(re.Find([]byte(filename)))
+		fmt.Printf("Deleting: %s... ", res)
 
 		installPath := viper.GetString("install")
 		del, err := filepath.Glob(installPath + res + "*")
@@ -45,6 +46,7 @@ the associated files for that addon.`,
 		}
 
 		filesystem.DeleteAll(del)
+		fmt.Printf("[DELETED]\n")
 
 		viper.Set("addons", addons)
 		viper.WriteConfig()

@@ -26,16 +26,21 @@ Simply run the command and all files will be downloaded and unpacked.
 				panic(fmt.Errorf("Failed to fetch files from CurseForge, mod id (%d) may not exist: %w", id, err))
 			}
 
-			file, err := curseforge.DownloadFile(id, curseforge.NegotiateFile(files))
+			negotiated := curseforge.NegotiateFile(files)
+			fmt.Printf("\nDownloading: %s... ", negotiated.Filename)
+			file, err := curseforge.DownloadFile(id, negotiated)
 			if err != nil {
 				panic(fmt.Errorf("Could not download file: %w", err))
 			}
 
+			fmt.Printf("Unpacking... ")
 			dest := viper.GetString("install")
 			err = curseforge.InstallAddon(file, dest)
 			if err != nil {
 				panic(fmt.Errorf("Failed to install addon in target destination"))
 			}
+
+			fmt.Printf("[INSTALLED]\n")
 		}
 	},
 }

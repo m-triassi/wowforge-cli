@@ -34,13 +34,16 @@ update that addon in isolation.`,
 			panic(fmt.Errorf("Failed to fetch files from CurseForge, mod id may not exist: %w", err))
 		}
 
-		file, err := curseforge.DownloadFile(modId, curseforge.NegotiateFile(files))
+		negotiated := curseforge.NegotiateFile(files)
+		fmt.Printf("Downloading: %s... ", negotiated.Filename)
+		file, err := curseforge.DownloadFile(modId, negotiated)
 		if err != nil {
 			panic(fmt.Errorf("Could not download file: %w", err))
 		}
 
 		dest := viper.GetString("install")
 
+		fmt.Printf("Unpacking... ")
 		err = curseforge.InstallAddon(file, dest)
 		if err != nil {
 			panic(fmt.Errorf("Failed to install addon in target destination"))
@@ -52,6 +55,7 @@ update that addon in isolation.`,
 			viper.Set("addons", list)
 			viper.WriteConfig()
 		}
+		fmt.Printf("[INSTALLED]\n")
 	},
 }
 
