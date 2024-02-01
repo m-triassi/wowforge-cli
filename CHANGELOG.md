@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/m-triassi/wowforge-cli/compare/v1.1.0...v1.2.0) (2024-02-01)
+
+
+### Features
+
+* [#21](https://github.com/m-triassi/wowforge-cli/issues/21) add prints that shows what the application is doing during runtime ([a1b76fa](https://github.com/m-triassi/wowforge-cli/commit/a1b76faf300c5b1695bfb507bd8774a3b7f81cd0))
+
+
+
 # [1.1.0](https://github.com/m-triassi/wowforge-cli/compare/v1.0.0...v1.1.0) (2023-12-23)
 
 
