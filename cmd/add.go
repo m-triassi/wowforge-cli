@@ -46,7 +46,7 @@ update that addon in isolation.`,
 		fmt.Printf("Unpacking... ")
 		err = curseforge.InstallAddon(file, dest)
 		if err != nil {
-			panic(fmt.Errorf("Failed to install addon in target destination"))
+			panic(fmt.Errorf("Failed to install addon in target destination: %w", err))
 		}
 
 		list := viper.GetIntSlice("addons")
