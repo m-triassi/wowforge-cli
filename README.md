@@ -31,7 +31,7 @@ brew install wowforge-cli
 Once complete you may run `wowforge-cli` globally.
 
 ### Set up
-Before being able to use application you **must** set the install path configuration value. This path specifies where 
+Before being able to use the application you **must** set the install path configuration value. This path specifies where 
 to install addons to. If you are using Lutris or Wine this path should be mounted somewhere in your file system. 
 
 With Lutris specifically you can right-click on the game and press "Browse Files" and it should open a file browser in 
@@ -58,7 +58,7 @@ wowforge-cli add <ID>
 This will download and install the addon to the path you specified above, as well as save the ID for future updates
 
 ### Updating Addons
-Updating addons is even easier, since all tracked ID are saved, you running the `update` command will update all tracked addons one by one without any intervention.
+Updating addons is even easier, since all tracked ID are saved, running the `update` command will update all tracked addons one by one without any intervention.
 ```bash
 wowforge-cli update
 ```
