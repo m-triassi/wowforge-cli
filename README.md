@@ -1,6 +1,6 @@
 # WoWForge-CLI
 
-WoWForge-CLI is an simple command line utility for Linux that can be used to track and install addons for World of Warcraft from CurseForge. It's extremely simplistic and lightweight requiring very little setup or external dependencies.
+WoWForge-CLI is a simple command line utility for Linux that can be used to track and install addons for World of Warcraft from CurseForge. It's extremely simplistic and lightweight requiring very little setup or external dependencies.
 
 ## Installation
 Currently pre-built binaries are available for download in the repositories [releases](https://github.com/m-triassi/wowforge-cli/releases) page. Simply download a release and follow the guidance below.
