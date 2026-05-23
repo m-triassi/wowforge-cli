@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/m-triassi/wowforge-cli/compare/v1.2.0...v1.3.0) (2026-05-23)
+
+
+### Features
+
+* **build:** [#26](https://github.com/m-triassi/wowforge-cli/issues/26) add nix build support for local dev and installation via flakes ([70ec29e](https://github.com/m-triassi/wowforge-cli/commit/70ec29ed38ab4595dd51a7696c20cf7329fcb03c))
+
+
+
 # [1.2.0](https://github.com/m-triassi/wowforge-cli/compare/v1.1.0...v1.2.0) (2024-02-01)
 
 
