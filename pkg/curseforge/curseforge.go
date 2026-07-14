@@ -4,17 +4,25 @@ import (
 	"archive/zip"
 	"encoding/json"
 	"fmt"
-	"golang.org/x/mod/semver"
 	"io"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"time"
 )
 
 const apiHost = "https://www.curseforge.com/api/v1"
 const gameId = 1
+
+var Flavors = map[string]int{
+	"retail":  517,
+	"classic": 67408,
+	"tbc":     73246,
+	"cata":    77522,
+	"mop":     79434,
+}
 
 type Client struct {
 	apiHost      string
@@ -39,11 +47,12 @@ func NewClient() *Client {
 }
 
 type File struct {
-	Id           int       `json:"id"`
-	Filename     string    `json:"filename"`
-	GameVersions []string  `json:"gameVersions"`
-	DateCreated  time.Time `json:"dateCreated"`
-	Location     string    `json:"location"`
+	Id                 int       `json:"id"`
+	Filename           string    `json:"fileName"`
+	GameVersions       []string  `json:"gameVersions"`
+	GameVersionTypeIds []int     `json:"gameVersionTypeIds"`
+	DateCreated        time.Time `json:"dateCreated"`
+	Location           string    `json:"location"`
 }
 
 type FileSet struct {
@@ -169,14 +178,20 @@ func (c *Client) InstallAddon(file File, dest string) error {
 	return nil
 }
 
-func NegotiateFile(files FileSet) File {
-	return c.NegotiateFile(files)
+func NegotiateFile(files FileSet, flavor string) File {
+	return c.NegotiateFile(files, flavor)
 }
 
-func (c *Client) NegotiateFile(files FileSet) File {
-	latest := File{GameVersions: make([]string, 1)}
+// NegotiateFile returns the most recently released file compatible with the
+// given flavor. An unknown flavor matches any file (no filtering).
+func (c *Client) NegotiateFile(files FileSet, flavor string) File {
+	typeId := Flavors[flavor]
+	latest := File{}
 	for _, file := range files.Data {
-		if semver.Compare("v"+file.GameVersions[0], "v"+latest.GameVersions[0]) == 1 {
+		if typeId != 0 && !slices.Contains(file.GameVersionTypeIds, typeId) {
+			continue
+		}
+		if file.DateCreated.After(latest.DateCreated) {
 			latest = file
 		}
 	}

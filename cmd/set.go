@@ -7,9 +7,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/m-triassi/wowforge-cli/pkg/curseforge"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
+	"sort"
+	"strings"
 )
 
 // setCmd represents the set command
@@ -44,11 +47,30 @@ the path in quotations or escape all spaces, like so:
 		fmt.Println(string(settings))
 	},
 	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if cmd.Flags().Changed("flavor") {
+			if _, ok := curseforge.Flavors[Flavor]; !ok {
+				return fmt.Errorf("invalid flavor %q, choose one of: %s", Flavor, flavorChoices())
+			}
+		}
+		return nil
+	},
 }
 
 var Install string
 var ApiKey string
 var DownloadDir string
+var Flavor string
+
+// flavorChoices returns the valid flavor names as a sorted, comma-separated list.
+func flavorChoices() string {
+	choices := make([]string, 0, len(curseforge.Flavors))
+	for name := range curseforge.Flavors {
+		choices = append(choices, name)
+	}
+	sort.Strings(choices)
+	return strings.Join(choices, ", ")
+}
 
 func init() {
 	rootCmd.AddCommand(setCmd)
@@ -76,6 +98,13 @@ func init() {
 	setCmd.Flags().StringVar(&ApiKey, "api-key", originalApi, apiUsage)
 	setCmd.Flags().StringVar(&DownloadDir, "download-dir", originalDownload, downloadUsage)
 	setCmd.Flags().StringVar(&Install, "install", originalInstall, installUsage)
+
+	flavorUsage := fmt.Sprintf("Target WoW flavor, one of: %s", flavorChoices())
+	setCmd.Flags().StringVar(&Flavor, "flavor", viper.GetString("flavor"), flavorUsage)
+
+	if flavorErr := viper.BindPFlag("flavor", setCmd.Flags().Lookup("flavor")); flavorErr != nil {
+		fmt.Println(flavorErr)
+	}
 
 	if apiErr := viper.BindPFlag("api-key", setCmd.Flags().Lookup("api-key")); apiErr != nil {
 		fmt.Println(apiErr)

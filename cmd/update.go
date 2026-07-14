@@ -26,7 +26,11 @@ Simply run the command and all files will be downloaded and unpacked.
 				panic(fmt.Errorf("Failed to fetch files from CurseForge, mod id (%d) may not exist: %w", id, err))
 			}
 
-			negotiated := curseforge.NegotiateFile(files)
+			negotiated := curseforge.NegotiateFile(files, viper.GetString("flavor"))
+			if negotiated.Id == 0 {
+				fmt.Printf("\nNo compatible file found for addon %d, skipping.\n", id)
+				continue
+			}
 			fmt.Printf("\nDownloading: %s... ", negotiated.Filename)
 			file, err := curseforge.DownloadFile(id, negotiated)
 			if err != nil {
