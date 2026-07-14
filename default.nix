@@ -1,14 +1,14 @@
 { pkgs ? import <nixpkgs> {} }:
 
 let
-  version = "1.2.0";
+  version = "1.4.0";
 in
 pkgs.buildGoModule {
   pname = "wowforge-cli";
   inherit version;
   src = ./.;
 
-  vendorHash = "sha256-C4KKe752MxqU/jOqKc3VXMiWalwan8hPP2RH1kgaDVI=";
+  vendorHash = "sha256-Z6d+YfqGq+zz8DoxZ0kkepn4GH4O0DB9qNJaaYCWjYI=";
 
   ldflags = [ "-X main.version=${version}" ];
 

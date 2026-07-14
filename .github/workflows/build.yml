@@ -3,6 +3,11 @@ name: Generate release-artifacts
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - 'flake.nix'
+      - 'default.nix'
+      - 'flake.lock'
+      - 'CHANGELOG.md'
 
 permissions:
   contents: write
@@ -25,6 +30,9 @@ jobs:
           cache: true
           cache-dependency-path: go.sum
 
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
       - name: Generate changelog and tag release
         id: changelog
         uses: TriPSs/conventional-changelog-action@v4
@@ -45,6 +53,33 @@ jobs:
       - name: Update version number for flag
         run: |
           sed -i 's/const version = \"v[0-9\.]*\"/const version = \"${{ steps.changelog.outputs.tag }}\"/' cmd/root.go
+
+      - name: Update nix version and vendorHash
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          VERSION="${{ steps.changelog.outputs.tag }}"
+          VERSION="${VERSION#v}"
+
+          # Bump the version in both nix files
+          sed -i "s/version = \"[0-9][0-9.]*\";/version = \"${VERSION}\";/" flake.nix default.nix
+
+          # Set a fake vendorHash so the build reports the correct one
+          FAKE="sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          sed -i "s|vendorHash = \"sha256-[^\"]*\";|vendorHash = \"${FAKE}\";|" flake.nix default.nix
+
+          # Build to capture the real hash from the mismatch error
+          REAL_HASH=$(nix build .#wowforge-cli 2>&1 | grep -oE 'got: *sha256-[A-Za-z0-9+/=]+' | grep -oE 'sha256-[A-Za-z0-9+/=]+')
+          if [ -z "$REAL_HASH" ]; then
+            echo "Failed to determine vendorHash" >&2
+            exit 1
+          fi
+          echo "Resolved vendorHash: ${REAL_HASH}"
+
+          # Write the real hash into both files
+          sed -i "s|vendorHash = \"sha256-[^\"]*\";|vendorHash = \"${REAL_HASH}\";|" flake.nix default.nix
+
+          # Verify the build now succeeds
+          nix build .#wowforge-cli
 
       - name: Commit release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
