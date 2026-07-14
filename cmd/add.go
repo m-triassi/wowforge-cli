@@ -34,7 +34,10 @@ update that addon in isolation.`,
 			panic(fmt.Errorf("Failed to fetch files from CurseForge, mod id may not exist: %w", err))
 		}
 
-		negotiated := curseforge.NegotiateFile(files)
+		negotiated := curseforge.NegotiateFile(files, viper.GetString("flavor"))
+		if negotiated.Id == 0 {
+			panic(fmt.Errorf("No file compatible with the configured flavor was found for addon %d", modId))
+		}
 		fmt.Printf("Downloading: %s... ", negotiated.Filename)
 		file, err := curseforge.DownloadFile(modId, negotiated)
 		if err != nil {
