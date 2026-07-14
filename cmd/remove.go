@@ -32,7 +32,7 @@ the associated files for that addon.`,
 		addons = append(addons[:remove], addons[remove+1:]...)
 
 		fileSet, _ := curseforge.GetFiles(modId)
-		filename := curseforge.NegotiateFile(fileSet).Filename
+		filename := curseforge.NegotiateFile(fileSet, viper.GetString("flavor")).Filename
 
 		re := regexp.MustCompile("[a-zA-Z]*")
 		res := string(re.Find([]byte(filename)))
