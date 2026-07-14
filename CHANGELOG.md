@@ -1,3 +1,19 @@
+# [1.4.0](https://github.com/m-triassi/wowforge-cli/compare/v1.3.0...v1.4.0) (2026-07-14)
+
+
+### Bug Fixes
+
+* [#28](https://github.com/m-triassi/wowforge-cli/issues/28) accomodate flavor when removing unneeded files ([5c12530](https://github.com/m-triassi/wowforge-cli/commit/5c12530e1d62e2cdfa38084db4598c983060c5d0))
+* [#28](https://github.com/m-triassi/wowforge-cli/issues/28) account for flavor in download flow ([81ebc91](https://github.com/m-triassi/wowforge-cli/commit/81ebc91c4a883c1bf86ed4d400c2e5bf5290ab89))
+* [#28](https://github.com/m-triassi/wowforge-cli/issues/28) add flavor specifier and return files by latest addon patch version ([e7c2487](https://github.com/m-triassi/wowforge-cli/commit/e7c248754c38545d4225b66ab2b2dc1d5e48f7a3))
+
+
+### Features
+
+* [#28](https://github.com/m-triassi/wowforge-cli/issues/28) allow users to set their game flavor via the game version id map ([581e1ca](https://github.com/m-triassi/wowforge-cli/commit/581e1ca3e59601179581f830e93db0823e98b5f3))
+
+
+
 # [1.3.0](https://github.com/m-triassi/wowforge-cli/compare/v1.2.0...v1.3.0) (2026-05-23)
 
 
