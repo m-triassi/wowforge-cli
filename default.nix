@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 
 let
-  version = "1.4.0";
+  version = "1.4.1";
 in
 pkgs.buildGoModule {
   pname = "wowforge-cli";

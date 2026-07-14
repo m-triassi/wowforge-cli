@@ -1,3 +1,12 @@
+## [1.4.1](https://github.com/m-triassi/wowforge-cli/compare/v1.4.0...v1.4.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **build:** add automated version and hash calculattion for nix on new releases ([7d96094](https://github.com/m-triassi/wowforge-cli/commit/7d960945bdd0a30ba21120dc16080f09e5adff1c))
+
+
+
 # [1.4.0](https://github.com/m-triassi/wowforge-cli/compare/v1.3.0...v1.4.0) (2026-07-14)
 
 
