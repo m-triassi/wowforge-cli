@@ -162,6 +162,10 @@ func (c *Client) InstallAddon(file File, dest string) error {
 		if zipFile.FileInfo().IsDir() {
 			os.MkdirAll(targetFilePath, zipFile.Mode())
 		} else {
+			if err := os.MkdirAll(filepath.Dir(targetFilePath), 0o755); err != nil {
+				return fmt.Errorf("Failed to create parent directory for target file: %w", err)
+			}
+
 			targetFile, err := os.Create(targetFilePath)
 			if err != nil {
 				return fmt.Errorf("Failed to create target file: %w", err)
