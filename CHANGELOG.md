@@ -1,3 +1,12 @@
+## [1.4.2](https://github.com/m-triassi/wowforge-cli/compare/v1.4.1...v1.4.2) (2026-09-21)
+
+
+### Bug Fixes
+
+* create parent directory for zip entries lacking dir entries (closes [#25](https://github.com/m-triassi/wowforge-cli/issues/25)) ([5d209e9](https://github.com/m-triassi/wowforge-cli/commit/5d209e914ed24636b81e08ede31f4c1d63716fe9))
+
+
+
 ## [1.4.1](https://github.com/m-triassi/wowforge-cli/compare/v1.4.0...v1.4.1) (2026-07-14)
 
 
