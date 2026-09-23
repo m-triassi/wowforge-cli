@@ -10,6 +10,7 @@ import (
 	"path"
 	"path/filepath"
 	"slices"
+	"strings"
 	"time"
 )
 
@@ -136,26 +137,31 @@ func (c *Client) DownloadFile(modId int, file File) (File, error) {
 	return file, nil
 }
 
-func InstallAddon(file File, dest string) error {
+func InstallAddon(file File, dest string) ([]string, error) {
 	return c.InstallAddon(file, dest)
 }
 
-func (c *Client) InstallAddon(file File, dest string) error {
+func (c *Client) InstallAddon(file File, dest string) ([]string, error) {
 	addon, err := zip.OpenReader(file.Location)
 	if err != nil {
-		return fmt.Errorf("Failed to read Zip file: %w", err)
+		return nil, fmt.Errorf("Failed to read Zip file: %w", err)
 	}
 	defer addon.Close()
 
 	destination, err := filepath.Abs(dest)
 	if err != nil {
-		return fmt.Errorf("Install file path is invalid %w", err)
+		return nil, fmt.Errorf("Install file path is invalid %w", err)
 	}
 
+	folders := map[string]bool{}
 	for _, zipFile := range addon.File {
+		if top := strings.Split(zipFile.Name, "/")[0]; top != "" {
+			folders[top] = true
+		}
+
 		zippedFile, err := zipFile.Open()
 		if err != nil {
-			return fmt.Errorf("Failed to open zipped file: %w", err)
+			return nil, fmt.Errorf("Failed to open zipped file: %w", err)
 		}
 		defer zippedFile.Close()
 
@@ -164,23 +170,28 @@ func (c *Client) InstallAddon(file File, dest string) error {
 			os.MkdirAll(targetFilePath, zipFile.Mode())
 		} else {
 			if err := os.MkdirAll(filepath.Dir(targetFilePath), 0o755); err != nil {
-				return fmt.Errorf("Failed to create parent directory for target file: %w", err)
+				return nil, fmt.Errorf("Failed to create parent directory for target file: %w", err)
 			}
 
 			targetFile, err := os.Create(targetFilePath)
 			if err != nil {
-				return fmt.Errorf("Failed to create target file: %w", err)
+				return nil, fmt.Errorf("Failed to create target file: %w", err)
 			}
 			defer targetFile.Close()
 
 			_, err = io.Copy(targetFile, zippedFile)
 			if err != nil {
-				return fmt.Errorf("Failed to copy content to target file: %w", err)
+				return nil, fmt.Errorf("Failed to copy content to target file: %w", err)
 			}
 		}
 	}
 
-	return nil
+	names := make([]string, 0, len(folders))
+	for name := range folders {
+		names = append(names, name)
+	}
+	slices.Sort(names)
+	return names, nil
 }
 
 func NegotiateFile(files FileSet, flavor string) File {

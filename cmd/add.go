@@ -47,17 +47,15 @@ update that addon in isolation.`,
 		dest := viper.GetString("install")
 
 		fmt.Printf("Unpacking... ")
-		err = curseforge.InstallAddon(file, dest)
+		folders, err := curseforge.InstallAddon(file, dest)
 		if err != nil {
 			panic(fmt.Errorf("Failed to install addon in target destination"))
 		}
 
-		list := viper.GetIntSlice("addons")
-		if !search.Contains(list, modId) {
-			list = append(list, modId)
-			viper.Set("addons", list)
-			viper.WriteConfig()
-		}
+		addons := search.LoadAddons()
+		addons[strconv.Itoa(modId)] = folders
+		viper.Set("addons", addons)
+		viper.WriteConfig()
 		fmt.Printf("[INSTALLED]\n")
 	},
 }

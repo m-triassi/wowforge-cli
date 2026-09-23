@@ -7,11 +7,9 @@ import (
 	"fmt"
 	"github.com/m-triassi/wowforge-cli/internal/files"
 	"github.com/m-triassi/wowforge-cli/internal/search"
-	"github.com/m-triassi/wowforge-cli/pkg/curseforge"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"path/filepath"
-	"regexp"
 	"strconv"
 )
 
@@ -27,26 +25,24 @@ the associated files for that addon.`,
 			panic(fmt.Errorf("passed mod ID is not strictly an integer: %w", err))
 		}
 
-		addons := viper.GetIntSlice("addons")
-		remove := search.Find(addons, modId)
-		addons = append(addons[:remove], addons[remove+1:]...)
-
-		fileSet, _ := curseforge.GetFiles(modId)
-		filename := curseforge.NegotiateFile(fileSet, viper.GetString("flavor")).Filename
-
-		re := regexp.MustCompile("[a-zA-Z]*")
-		res := string(re.Find([]byte(filename)))
-		fmt.Printf("Deleting: %s... ", res)
+		addons := search.LoadAddons()
+		folders := addons[strconv.Itoa(modId)]
+		if len(folders) == 0 {
+			fmt.Printf("No installed folders are recorded for addon %d. Run \"update\" first so its files can be tracked and removed.\n", modId)
+			return
+		}
+		delete(addons, strconv.Itoa(modId))
 
 		installPath := viper.GetString("install")
-		del, err := filepath.Glob(installPath + res + "*")
-
-		if err != nil {
-			panic(fmt.Errorf("could not read filesystem at path (%s): %w", installPath, err))
+		for _, folder := range folders {
+			fmt.Printf("Deleting: %s... ", folder)
+			del, err := filepath.Glob(filepath.Join(installPath, folder))
+			if err != nil {
+				panic(fmt.Errorf("could not read filesystem at path (%s): %w", installPath, err))
+			}
+			filesystem.DeleteAll(del)
+			fmt.Printf("[DELETED]\n")
 		}
-
-		filesystem.DeleteAll(del)
-		fmt.Printf("[DELETED]\n")
 
 		viper.Set("addons", addons)
 		viper.WriteConfig()
