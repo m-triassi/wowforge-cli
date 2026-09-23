@@ -27,6 +27,10 @@ the associated files for that addon.`,
 
 		addons := search.LoadAddons()
 		folders := addons[strconv.Itoa(modId)]
+		if len(folders) == 0 {
+			fmt.Printf("No installed folders are recorded for addon %d. Run \"update\" first so its files can be tracked and removed.\n", modId)
+			return
+		}
 		delete(addons, strconv.Itoa(modId))
 
 		installPath := viper.GetString("install")
