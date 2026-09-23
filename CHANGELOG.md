@@ -1,3 +1,20 @@
+# [1.5.0](https://github.com/m-triassi/wowforge-cli/compare/v1.4.2...v1.5.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* [#31](https://github.com/m-triassi/wowforge-cli/issues/31) delete all recorded addon folders on remove to prevent orphaned files ([ccb0b44](https://github.com/m-triassi/wowforge-cli/commit/ccb0b442fc56878a17495d9d6d55b88fd8e07b66))
+* [#31](https://github.com/m-triassi/wowforge-cli/issues/31) retain addons with empty folder lists to prevent dropping migrated entries ([e835b2f](https://github.com/m-triassi/wowforge-cli/commit/e835b2fbe95f3814ab55a85795c829688364013a))
+* [#31](https://github.com/m-triassi/wowforge-cli/issues/31) warn on remove when addon folders are unknown to prevent silent orphaned files ([ccdae72](https://github.com/m-triassi/wowforge-cli/commit/ccdae72af0eaefd40a249559b8b3123e2d8acee5))
+
+
+### Features
+
+* [#31](https://github.com/m-triassi/wowforge-cli/issues/31) return installed folder names from InstallAddon to enable accurate tracking ([496ac5c](https://github.com/m-triassi/wowforge-cli/commit/496ac5cd224ce7065e9ac0e1afa5d61041819368))
+* [#31](https://github.com/m-triassi/wowforge-cli/issues/31) store installed addon folders in config to improve readability ([31db9d8](https://github.com/m-triassi/wowforge-cli/commit/31db9d8940898c019433dda5fa4aac14e5b7ac8f))
+
+
+
 ## [1.4.2](https://github.com/m-triassi/wowforge-cli/compare/v1.4.1...v1.4.2) (2026-09-21)
 
 

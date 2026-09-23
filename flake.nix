@@ -14,7 +14,7 @@
       {
         packages = {
           wowforge-cli = let
-            version = "1.4.2";
+            version = "1.5.0";
           in pkgs.buildGoModule {
             pname = "wowforge-cli";
             inherit version;
