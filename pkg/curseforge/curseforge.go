@@ -22,6 +22,7 @@ var Flavors = map[string]int{
 	"tbc":     73246,
 	"cata":    77522,
 	"mop":     79434,
+	"forever": 88568,
 }
 
 type Client struct {
