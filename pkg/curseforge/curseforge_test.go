@@ -82,8 +82,12 @@ func TestClient_InstallAddon(t *testing.T) {
 			client := NewClient()
 			file := File{Location: zipPath}
 
-			if err := client.InstallAddon(file, destDir); err != nil {
+			folders, err := client.InstallAddon(file, destDir)
+			if err != nil {
 				t.Fatalf("InstallAddon returned an error: %v", err)
+			}
+			if len(folders) != 1 || folders[0] != "MyAddon" {
+				t.Errorf("InstallAddon folders = %v, want [MyAddon]", folders)
 			}
 
 			for _, file := range testFiles {
