@@ -30,6 +30,50 @@ brew install wowforge-cli
 
 Once complete you may run `wowforge-cli` globally.
 
+### NixOS (Nix Flakes)
+
+`wowforge-cli` ships a flake, so no external package repository is required. You will need flakes enabled (`experimental-features = nix-command flakes`).
+
+To try it out in a temporary shell without installing anything:
+
+```bash
+nix shell github:m-triassi/wowforge-cli
+```
+
+To install it permanently, add the flake as an input to your system `flake.nix`:
+
+```nix
+{
+  inputs.wowforge-cli.url = "github:m-triassi/wowforge-cli";
+
+  outputs = { self, nixpkgs, wowforge-cli, ... }: {
+    nixosConfigurations.<host> = nixpkgs.lib.nixosSystem {
+      modules = [ ./configuration.nix ];
+      specialArgs = { inherit wowforge-cli; };
+    };
+  };
+}
+```
+
+Then add it to your `configuration.nix` and rebuild with `sudo nixos-rebuild switch`:
+
+```nix
+{ pkgs, wowforge-cli, ... }:
+{
+  environment.systemPackages = [
+    wowforge-cli.packages.${pkgs.system}.default
+  ];
+}
+```
+
+If you don't manage your system with a flake, you can install it imperatively into your user profile instead:
+
+```bash
+nix profile install github:m-triassi/wowforge-cli
+```
+
+Once complete you may run `wowforge-cli` globally.
+
 ### Set up
 Before being able to use the application you **must** set the install path configuration value. This path specifies where 
 to install addons to. If you are using Lutris or Wine this path should be mounted somewhere in your file system. 
