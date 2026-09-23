@@ -13,12 +13,11 @@ import (
 func LoadAddons() map[string][]string {
 	m := map[string][]string{}
 	for key, val := range viper.GetStringMap("addons") {
+		m[key] = []string{}
 		if folders, ok := val.([]interface{}); ok {
 			for _, f := range folders {
 				m[key] = append(m[key], fmt.Sprint(f))
 			}
-		} else {
-			m[key] = []string{}
 		}
 	}
 	if len(m) > 0 {
